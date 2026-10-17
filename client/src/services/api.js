@@ -1,38 +1,25 @@
-import axios from 'axios';
-
-const API_URL =
-  import.meta.env.VITE_API_URL ||
-  'https://vishal-9e0y.onrender.com/api';
-
-const api = axios.create({
-  baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  timeout: 15000,
-  withCredentials: true
-});
-
-const token =
-  localStorage.getItem('vishal_token') ||
-  localStorage.getItem('vishwa_token');
-
-if (token) {
-  api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-}
-
 api.interceptors.response.use(
-  res => res,
-  err => {
-    if (err.response?.status === 401) {
+  (response) => response,
+  (error) => {
+    const status = error.response?.status;
+
+    console.error(
+      'API error:',
+      error.config?.url,
+      status,
+      error.response?.data || error.message
+    );
+
+    if (status === 401 && !error.config?.url?.includes('/auth/login')) {
       localStorage.removeItem('vishal_token');
       localStorage.removeItem('vishwa_token');
-      delete api.defaults.headers.common['Authorization'];
-      window.location.href = '/login';
+      delete api.defaults.headers.common.Authorization;
+
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
     }
 
-    return Promise.reject(err);
+    return Promise.reject(error);
   }
 );
-
-export default api;
