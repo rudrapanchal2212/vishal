@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/((?!api|assets|icons|logo.png|manifest.json|sw.js|favicon.svg|registerSW.js|workbox-.*).*)",
+      "destination": "/index.html"
+    }
+  ]
+}
