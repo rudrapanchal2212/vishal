@@ -45,7 +45,7 @@ export default function Signup() {
     try {
       await signup({ companyName, contractorName, pan, mobile, email, address, password, logo: logoPreview });
       toast.success('Account created successfully!');
-      navigate('/dashboard');
+      navigate('/dashboard', { replace: true });
     } catch (err) {
       toast.error(err.response?.data?.message || 'Signup failed');
     } finally {

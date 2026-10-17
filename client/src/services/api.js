@@ -9,22 +9,38 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json'
   },
-  timeout: 15000,
-  withCredentials: true
+  timeout: 30000
 });
 
-const token =
-  localStorage.getItem('vishal_token') ||
-  localStorage.getItem('vishwa_token');
+// Dynamic request interceptor: attach fresh token to every request
+api.interceptors.request.use(
+  (config) => {
+    const token =
+      localStorage.getItem('vishal_token') ||
+      localStorage.getItem('vishwa_token');
+    if (token) {
+      config.headers = config.headers || {};
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-if (token) {
-  api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-}
-
+// Response interceptor: only redirect to /login on 401 if not already on an auth route/page
 api.interceptors.response.use(
-  res => res,
-  err => {
-    if (err.response?.status === 401) {
+  (res) => res,
+  (err) => {
+    const requestUrl = err.config?.url || '';
+    const isAuthRoute =
+      requestUrl.includes('/auth/login') ||
+      requestUrl.includes('/auth/signup');
+    const isAuthPage =
+      typeof window !== 'undefined' &&
+      (window.location.pathname === '/login' ||
+        window.location.pathname === '/signup');
+
+    if (err.response?.status === 401 && !isAuthRoute && !isAuthPage) {
       localStorage.removeItem('vishal_token');
       localStorage.removeItem('vishwa_token');
       delete api.defaults.headers.common['Authorization'];

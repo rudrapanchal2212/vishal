@@ -17,34 +17,50 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user?.darkMode]);
 
-  // Verify token on mount
+  // Verify stored token on initial mount only
   useEffect(() => {
-    const verifyToken = async () => {
-      if (!token) {
-        setLoading(false);
+    let isMounted = true;
+    const verifyStoredToken = async () => {
+      const storedToken =
+        localStorage.getItem('vishal_token') ||
+        localStorage.getItem('vishwa_token');
+
+      if (!storedToken) {
+        if (isMounted) setLoading(false);
         return;
       }
+
       try {
-        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         const res = await api.get('/auth/me');
-        setUser(res.data.user);
+        if (isMounted) {
+          setUser(res.data.user);
+          setToken(storedToken);
+        }
       } catch (err) {
-        localStorage.removeItem('vishal_token');
-        localStorage.removeItem('vishwa_token');
-        setToken(null);
-        delete api.defaults.headers.common['Authorization'];
+        if (isMounted) {
+          localStorage.removeItem('vishal_token');
+          localStorage.removeItem('vishwa_token');
+          setToken(null);
+          setUser(null);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
-    verifyToken();
-  }, [token]);
+
+    verifyStoredToken();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const login = useCallback(async (email, password) => {
     const res = await api.post('/auth/login', { email, password });
     const { token: newToken, user: userData } = res.data;
     localStorage.setItem('vishal_token', newToken);
-    api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
     setToken(newToken);
     setUser(userData);
     return userData;
@@ -54,7 +70,6 @@ export const AuthProvider = ({ children }) => {
     const res = await api.post('/auth/signup', data);
     const { token: newToken, user: userData } = res.data;
     localStorage.setItem('vishal_token', newToken);
-    api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
     setToken(newToken);
     setUser(userData);
     return userData;
@@ -63,7 +78,6 @@ export const AuthProvider = ({ children }) => {
   const logout = useCallback(() => {
     localStorage.removeItem('vishal_token');
     localStorage.removeItem('vishwa_token');
-    delete api.defaults.headers.common['Authorization'];
     setToken(null);
     setUser(null);
   }, []);

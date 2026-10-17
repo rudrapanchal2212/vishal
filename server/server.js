@@ -5,7 +5,7 @@ const path = require('path');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errorHandler');
 
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, '.env') });
 connectDB();
 
 const app = express();
@@ -13,6 +13,7 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:5173', 
   'http://localhost:5174', 
+  'http://localhost:5175', 
   'http://localhost:3000', 
   'https://vishwa-construction.vercel.app'
 ];
@@ -20,7 +21,12 @@ if (process.env.CLIENT_URL) allowedOrigins.push(process.env.CLIENT_URL);
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin) || (origin && origin.endsWith('.vercel.app'))) {
+    if (
+      !origin || 
+      allowedOrigins.includes(origin) || 
+      (origin && origin.endsWith('.vercel.app')) ||
+      (origin && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin))
+    ) {
       callback(null, true);
     } else {
       console.log('Blocked by CORS:', origin);
