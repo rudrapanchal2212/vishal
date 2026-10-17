@@ -29,9 +29,10 @@ api.interceptors.request.use(
 
 // Response interceptor: only redirect to /login on 401 if not already on an auth route/page
 api.interceptors.response.use(
-  (res) => res,
-  (err) => {
-    const requestUrl = err.config?.url || '';
+  (response) => response,
+  (error) => {
+    const status = error.response?.status;
+    const requestUrl = error.config?.url || '';
     const isAuthRoute =
       requestUrl.includes('/auth/login') ||
       requestUrl.includes('/auth/signup');
@@ -40,14 +41,24 @@ api.interceptors.response.use(
       (window.location.pathname === '/login' ||
         window.location.pathname === '/signup');
 
-    if (err.response?.status === 401 && !isAuthRoute && !isAuthPage) {
+    console.error(
+      'API error:',
+      requestUrl,
+      status,
+      error.response?.data || error.message
+    );
+
+    if (status === 401 && !isAuthRoute && !isAuthPage) {
       localStorage.removeItem('vishal_token');
       localStorage.removeItem('vishwa_token');
       delete api.defaults.headers.common['Authorization'];
-      window.location.href = '/login';
+
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
     }
 
-    return Promise.reject(err);
+    return Promise.reject(error);
   }
 );
 
