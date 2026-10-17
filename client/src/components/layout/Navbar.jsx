@@ -7,6 +7,7 @@ const titles = {
   '/customers': 'Customers',
   '/invoices': 'Invoice History',
   '/invoices/create': 'Create Invoice',
+  '/templates': 'Estimate Templates',
   '/profile': 'Profile'
 };
 

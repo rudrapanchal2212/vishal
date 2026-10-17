@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayout';
 import { PageLoader } from '../components/common/LoadingSpinner';
+import QuickGenerateModal from '../components/template/QuickGenerateModal';
 import { dashboardService } from '../services/dashboardService';
 import { useAuth } from '../context/AuthContext';
 import { formatDate } from '../utils/dateFormatter';
@@ -28,6 +29,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [quickModalOpen, setQuickModalOpen] = useState(false);
 
   useEffect(() => {
     dashboardService.getStats()
@@ -78,17 +80,28 @@ export default function Dashboard() {
 
       {/* Quick Action */}
       <div className="card p-5 mb-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h3 className="font-bold text-gray-900 dark:text-white">Create New Invoice</h3>
-            <p className="text-gray-500 dark:text-slate-400 text-sm mt-0.5">Generate a professional bill instantly</p>
+            <h3 className="font-bold text-gray-900 dark:text-white">Create Invoice & Estimates</h3>
+            <p className="text-gray-500 dark:text-slate-400 text-sm mt-0.5">Generate a professional bill manually or instantly from a saved template</p>
           </div>
-          <Link to="/invoices/create" className="btn-primary flex-shrink-0">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
-              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-            </svg>
-            New Invoice
-          </Link>
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <button
+              onClick={() => setQuickModalOpen(true)}
+              className="btn-primary flex-shrink-0 flex items-center gap-1.5 shadow-lg shadow-primary-600/20"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-4 h-4">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+              Quick Template Bill
+            </button>
+            <Link to="/invoices/create" className="btn-secondary flex-shrink-0 flex items-center gap-1.5">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              New Invoice
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -168,6 +181,11 @@ export default function Dashboard() {
           )}
         </div>
       </div>
+
+      <QuickGenerateModal
+        isOpen={quickModalOpen}
+        onClose={() => setQuickModalOpen(false)}
+      />
     </MainLayout>
   );
 }

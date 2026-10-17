@@ -4,8 +4,10 @@ import MainLayout from '../layouts/MainLayout';
 import { PageLoader } from '../components/common/LoadingSpinner';
 import InvoicePreview from '../components/invoice/InvoicePreview';
 import Modal from '../components/common/Modal';
+import QuickGenerateModal from '../components/template/QuickGenerateModal';
 import { customerService } from '../services/customerService';
 import { invoiceService } from '../services/invoiceService';
+import { templateService } from '../services/templateService';
 import { useAuth } from '../context/AuthContext';
 import { amountToWords, formatCurrency } from '../utils/amountToWords';
 import { todayInputValue } from '../utils/dateFormatter';
@@ -21,6 +23,8 @@ export default function CreateInvoice() {
   const preselectedCustomerId = searchParams.get('customerId');
 
   const [customers, setCustomers] = useState([]);
+  const [templates, setTemplates] = useState([]);
+  const [quickModalOpen, setQuickModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
@@ -43,16 +47,45 @@ export default function CreateInvoice() {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
 
   useEffect(() => {
-    customerService.getAll()
-      .then(res => {
-        setCustomers(res.data.data);
+    Promise.all([
+      customerService.getAll(),
+      templateService.getAll()
+    ])
+      .then(([custRes, tplRes]) => {
+        const custs = custRes.data.data || [];
+        setCustomers(custs);
+        setTemplates(tplRes.data.data || []);
+
         if (preselectedCustomerId) {
-          const c = res.data.data.find(x => x._id === preselectedCustomerId);
+          const c = custs.find(x => x._id === preselectedCustomerId);
           if (c) setSelectedCustomer(c);
         }
       })
+      .catch((err) => {
+        console.error('Error loading initial data:', err);
+      })
       .finally(() => setLoading(false));
   }, []);
+
+  const handleApplyTemplate = (templateId) => {
+    if (!templateId) return;
+    const tpl = templates.find(t => t._id === templateId);
+    if (!tpl) return;
+
+    setForm(prev => ({
+      ...prev,
+      items: tpl.items.map(i => ({
+        description: i.description,
+        amount: i.amount
+      })),
+      categoryOfService: tpl.categoryOfService || prev.categoryOfService,
+      gstEnabled: tpl.gstEnabled !== undefined ? tpl.gstEnabled : prev.gstEnabled,
+      gstPercent: tpl.gstPercent !== undefined ? tpl.gstPercent : prev.gstPercent,
+      notes: tpl.notes || prev.notes
+    }));
+
+    toast.success(`Loaded items from "${tpl.name}"!`);
+  };
 
   useEffect(() => {
     if (!form.customerId) { setNextBillNumber(null); setSelectedCustomer(null); return; }
@@ -123,6 +156,41 @@ export default function CreateInvoice() {
 
         <h2 className="page-title mb-6">Create New Invoice</h2>
 
+        {/* Template Quick Actions Banner */}
+        <div className="card p-4 mb-6 bg-gradient-to-r from-primary-50 via-blue-50 to-indigo-50 dark:from-slate-800 dark:via-slate-800 dark:to-primary-950/30 border border-primary-100 dark:border-primary-900/40">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-base font-bold text-gray-900 dark:text-white flex items-center gap-1.5">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-4 h-4 text-primary-600">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                  </svg>
+                  Need a standard estimate?
+                </span>
+                <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-primary-100 text-primary-700 dark:bg-primary-900/40 dark:text-primary-300">
+                  Instant
+                </span>
+              </div>
+              <p className="text-xs text-gray-600 dark:text-slate-400 mt-0.5">
+                Generate in 2 clicks with just Panchayat/Customer Name & Date, or select a template to pre-fill items below.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <button
+                type="button"
+                onClick={() => setQuickModalOpen(true)}
+                className="btn-primary text-xs sm:text-sm py-2 px-3 font-bold flex items-center gap-1.5 shadow-md shadow-primary-600/20"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-4 h-4">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                </svg>
+                Instant Bill
+              </button>
+            </div>
+          </div>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Customer Selection */}
           <div className="card p-5">
@@ -181,6 +249,33 @@ export default function CreateInvoice() {
                 Add Row
               </button>
             </div>
+
+            {/* Auto-fill from Template dropdown */}
+            {templates.length > 0 && (
+              <div className="mb-4 p-3 bg-gray-50 dark:bg-slate-700/40 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2 border border-gray-100 dark:border-slate-600">
+                <span className="text-xs font-semibold text-gray-700 dark:text-slate-300 flex items-center gap-1.5">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-primary-600">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                  </svg>
+                  Pre-fill Static Items from Template:
+                </span>
+                <select
+                  className="text-xs bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg px-2.5 py-1.5 font-medium text-gray-800 dark:text-slate-200"
+                  onChange={(e) => {
+                    handleApplyTemplate(e.target.value);
+                    e.target.value = '';
+                  }}
+                  defaultValue=""
+                >
+                  <option value="">-- Choose Standard Template --</option>
+                  {templates.map(t => (
+                    <option key={t._id} value={t._id}>
+                      {t.name} ({formatCurrency(t.totalAmount)})
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <div className="space-y-3">
               {form.items.map((item, idx) => (
@@ -343,6 +438,16 @@ export default function CreateInvoice() {
           )}
         </div>
       </Modal>
+
+      {/* Quick Document Generation from Template Modal */}
+      <QuickGenerateModal
+        isOpen={quickModalOpen}
+        onClose={() => setQuickModalOpen(false)}
+        onGenerated={(inv) => {
+          setSavedInvoice(inv);
+          setShowPreview(true);
+        }}
+      />
     </MainLayout>
   );
 }

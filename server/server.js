@@ -44,6 +44,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/customers', require('./routes/customers'));
 app.use('/api/invoices', require('./routes/invoices'));
+app.use('/api/templates', require('./routes/templates'));
 app.use('/api/profile', require('./routes/profile'));
 app.use('/api/dashboard', require('./routes/dashboard'));
 

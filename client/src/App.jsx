@@ -13,6 +13,7 @@ import CreateInvoice from './pages/CreateInvoice';
 import InvoiceHistory from './pages/InvoiceHistory';
 import InvoiceDetail from './pages/InvoiceDetail';
 import EditInvoice from './pages/EditInvoice';
+import Templates from './pages/Templates';
 import Profile from './pages/Profile';
 
 function ProtectedRoute({ children }) {
@@ -68,6 +69,7 @@ function AppRoutes() {
         <Route path="/invoices/create" element={<ProtectedRoute><CreateInvoice /></ProtectedRoute>} />
         <Route path="/invoices/:id" element={<ProtectedRoute><InvoiceDetail /></ProtectedRoute>} />
         <Route path="/invoices/:id/edit" element={<ProtectedRoute><EditInvoice /></ProtectedRoute>} />
+        <Route path="/templates" element={<ProtectedRoute><Templates /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
 
         {/* Default */}

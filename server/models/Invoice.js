@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 
 const WorkItemSchema = new mongoose.Schema({
   description: { type: String, required: true },
+  quantity: { type: Number, default: 1 },
+  unit: { type: String, default: '' },
+  rate: { type: Number, default: 0 },
   amount: { type: Number, required: true, default: 0 }
 }, { _id: false });
 
