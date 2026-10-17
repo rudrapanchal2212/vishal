@@ -261,6 +261,9 @@ export default function Templates() {
                           <span className="text-gray-700 dark:text-slate-300 font-medium pr-2 line-clamp-2">
                             {idx + 1}. {item.description}
                           </span>
+                          <span className="text-xs font-semibold text-gray-500 dark:text-slate-400 px-2 flex-shrink-0">
+                            Qty: {item.quantity !== undefined && item.quantity !== null ? item.quantity : 1}{item.unit ? ` ${item.unit}` : ''}
+                          </span>
                           <span className="font-mono font-bold text-gray-900 dark:text-white flex-shrink-0">
                             {formatCurrency(item.amount)}
                           </span>

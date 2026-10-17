@@ -14,7 +14,7 @@ import { todayInputValue } from '../utils/dateFormatter';
 import { generatePDF, printInvoice } from '../utils/pdfGenerator';
 import toast from 'react-hot-toast';
 
-const EMPTY_ITEM = { description: '', amount: '' };
+const EMPTY_ITEM = { description: '', quantity: 1, unit: '', amount: '' };
 
 export default function CreateInvoice() {
   const { user } = useAuth();
@@ -122,7 +122,12 @@ export default function CreateInvoice() {
     try {
       const res = await invoiceService.create({
         ...form,
-        items: form.items.map(i => ({ description: i.description, amount: parseFloat(i.amount) }))
+        items: form.items.map(i => ({
+          description: i.description,
+          quantity: parseFloat(i.quantity) || 1,
+          unit: i.unit || '',
+          amount: parseFloat(i.amount)
+        }))
       });
       setSavedInvoice(res.data.data);
       setShowPreview(true);
@@ -277,6 +282,15 @@ export default function CreateInvoice() {
               </div>
             )}
 
+            {/* Table Column Labels */}
+            <div className="hidden sm:flex gap-3 text-xs font-semibold text-gray-500 dark:text-slate-400 px-1 mb-1">
+              <span className="w-6 text-center">#</span>
+              <span className="flex-1">Description</span>
+              <span className="w-24 text-center">Quantity</span>
+              <span className="w-32 text-right pr-2">Amount (₹)</span>
+              {form.items.length > 1 && <span className="w-8"></span>}
+            </div>
+
             <div className="space-y-3">
               {form.items.map((item, idx) => (
                 <div key={idx} className="flex gap-3 items-start">
@@ -290,6 +304,17 @@ export default function CreateInvoice() {
                       placeholder="Work description (e.g., Total bungalow civil work finished.)"
                       value={item.description}
                       onChange={setItem(idx, 'description')}
+                    />
+                  </div>
+                  <div className="w-24 flex-shrink-0">
+                    <input
+                      type="number"
+                      className="form-input text-sm text-center"
+                      placeholder="Qty"
+                      value={item.quantity !== undefined ? item.quantity : 1}
+                      onChange={setItem(idx, 'quantity')}
+                      min="0"
+                      step="any"
                     />
                   </div>
                   <div className="w-32 flex-shrink-0">

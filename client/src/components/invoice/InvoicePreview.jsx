@@ -89,7 +89,7 @@ export default function InvoicePreview({ invoice, contractor }) {
               textAlign: 'center',
               fontWeight: 'bold',
               backgroundColor: '#f5f5f5',
-              width: '75%',
+              width: '60%',
               fontSize: '12pt'
             }}>
               Description
@@ -97,10 +97,21 @@ export default function InvoicePreview({ invoice, contractor }) {
             <th style={{
               border: '1px solid #000',
               padding: '8px 12px',
+              textAlign: 'center',
+              fontWeight: 'bold',
+              backgroundColor: '#f5f5f5',
+              width: '18%',
+              fontSize: '12pt'
+            }}>
+              Quantity
+            </th>
+            <th style={{
+              border: '1px solid #000',
+              padding: '8px 12px',
               textAlign: 'right',
               fontWeight: 'bold',
               backgroundColor: '#f5f5f5',
-              width: '25%',
+              width: '22%',
               textDecoration: 'underline',
               fontSize: '12pt'
             }}>
@@ -132,6 +143,18 @@ export default function InvoicePreview({ invoice, contractor }) {
               <td style={{
                 border: '1px solid #000',
                 padding: '8px 12px',
+                textAlign: 'center',
+                verticalAlign: 'top',
+                whiteSpace: 'nowrap',
+                fontWeight: '500'
+              }}>
+                {item.quantity !== undefined && item.quantity !== null && item.quantity !== ''
+                  ? `${item.quantity}${item.unit ? ` ${item.unit}` : ''}`
+                  : '1'}
+              </td>
+              <td style={{
+                border: '1px solid #000',
+                padding: '8px 12px',
                 textAlign: 'right',
                 verticalAlign: 'top',
                 whiteSpace: 'nowrap'
@@ -148,13 +171,14 @@ export default function InvoicePreview({ invoice, contractor }) {
             <tr key={`empty-${i}`}>
               <td style={{ border: '1px solid #000', padding: '8px 12px', height: '32px' }}>&nbsp;</td>
               <td style={{ border: '1px solid #000', padding: '8px 12px' }}>&nbsp;</td>
+              <td style={{ border: '1px solid #000', padding: '8px 12px' }}>&nbsp;</td>
             </tr>
           ))}
 
           {/* GST row if enabled */}
           {gstEnabled && (
             <tr>
-              <td style={{ border: '1px solid #000', padding: '8px 12px', textAlign: 'right', fontWeight: 'bold' }}>
+              <td colSpan={2} style={{ border: '1px solid #000', padding: '8px 12px', textAlign: 'right', fontWeight: 'bold' }}>
                 GST ({gstPercent}%)
               </td>
               <td style={{ border: '1px solid #000', padding: '8px 12px', textAlign: 'right' }}>
@@ -165,7 +189,7 @@ export default function InvoicePreview({ invoice, contractor }) {
 
           {/* Total Row */}
           <tr>
-            <td style={{
+            <td colSpan={2} style={{
               border: '1px solid #000',
               padding: '10px 12px',
               textAlign: 'right',
@@ -187,7 +211,7 @@ export default function InvoicePreview({ invoice, contractor }) {
 
           {/* Amount in Words */}
           <tr>
-            <td colSpan={2} style={{
+            <td colSpan={3} style={{
               border: '1px solid #000',
               padding: '8px 12px',
               fontSize: '11pt',
