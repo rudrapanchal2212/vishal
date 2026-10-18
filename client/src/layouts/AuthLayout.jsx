@@ -17,6 +17,9 @@ export default function AuthLayout({ children }) {
         <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl p-8 animate-slide-up">
           {children}
         </div>
+        <div className="mt-5">
+          <InstallAppButton variant="landing" />
+        </div>
         <p className="text-center text-primary-300 text-xs mt-6">
           © 2024 Vishal App. All rights reserved.
         </p>

@@ -15,7 +15,10 @@ const allowedOrigins = [
   'http://localhost:5174', 
   'http://localhost:5175', 
   'http://localhost:3000', 
-  'https://vishwa-construction.vercel.app'
+  'https://vishwa-construction.vercel.app',
+  'capacitor://localhost',
+  'http://localhost',
+  'https://localhost'
 ];
 if (process.env.CLIENT_URL) allowedOrigins.push(process.env.CLIENT_URL);
 
@@ -25,7 +28,8 @@ app.use(cors({
       !origin || 
       allowedOrigins.includes(origin) || 
       (origin && origin.endsWith('.vercel.app')) ||
-      (origin && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin))
+      (origin && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) ||
+      (origin && origin.startsWith('capacitor://'))
     ) {
       callback(null, true);
     } else {
@@ -50,6 +54,23 @@ app.use('/api/dashboard', require('./routes/dashboard'));
 
 // Health check
 app.get('/api/health', (req, res) => res.json({ status: 'OK', message: 'Vishal App API is running' }));
+
+// Static APK download endpoints
+app.get(['/vishal-app.apk', '/download-apk'], (req, res) => {
+  const possiblePaths = [
+    path.join(__dirname, 'public/vishal-app.apk'),
+    path.join(__dirname, '../client/public/vishal-app.apk'),
+    path.join(__dirname, '../client/dist/vishal-app.apk'),
+    path.join(__dirname, '../Vishal-App.apk')
+  ];
+  const fs = require('fs');
+  for (const p of possiblePaths) {
+    if (fs.existsSync(p)) {
+      return res.download(p, 'Vishal-App.apk');
+    }
+  }
+  res.status(404).send('APK file not found on server.');
+});
 
 // Serve React build in production (Uncomment if hosting frontend and backend together)
 /*
