@@ -14,7 +14,7 @@ import { todayInputValue } from '../utils/dateFormatter';
 import { generatePDF, printInvoice } from '../utils/pdfGenerator';
 import toast from 'react-hot-toast';
 
-const EMPTY_ITEM = { description: '', quantity: 1, unit: '', amount: '' };
+const EMPTY_ITEM = { description: '', quantity: 1, unit: '', rate: '', amount: '' };
 
 export default function CreateInvoice() {
   const { user } = useAuth();
@@ -76,6 +76,9 @@ export default function CreateInvoice() {
       ...prev,
       items: tpl.items.map(i => ({
         description: i.description,
+        quantity: i.quantity !== undefined ? i.quantity : 1,
+        unit: i.unit || '',
+        rate: i.rate || (i.amount && i.quantity ? (parseFloat(i.amount) / parseFloat(i.quantity)).toFixed(2) : ''),
         amount: i.amount
       })),
       categoryOfService: tpl.categoryOfService || prev.categoryOfService,
@@ -98,9 +101,27 @@ export default function CreateInvoice() {
   const setField = (field) => (e) => setForm(p => ({ ...p, [field]: e.target.value }));
 
   const setItem = (idx, field) => (e) => {
+    const val = e.target.value;
     setForm(p => {
       const items = [...p.items];
-      items[idx] = { ...items[idx], [field]: e.target.value };
+      const item = { ...items[idx], [field]: val };
+
+      // Auto-compute amount if rate or quantity changes
+      if (field === 'rate' && val !== '') {
+        const r = parseFloat(val);
+        const q = parseFloat(item.quantity) || 1;
+        if (!isNaN(r)) item.amount = (r * q).toFixed(2);
+      } else if (field === 'quantity' && item.rate !== '') {
+        const q = parseFloat(val) || 1;
+        const r = parseFloat(item.rate);
+        if (!isNaN(r)) item.amount = (r * q).toFixed(2);
+      } else if (field === 'amount' && val !== '') {
+        const a = parseFloat(val);
+        const q = parseFloat(item.quantity) || 1;
+        if (!isNaN(a) && q > 0) item.rate = (a / q).toFixed(2);
+      }
+
+      items[idx] = item;
       return { ...p, items };
     });
   };
@@ -126,6 +147,7 @@ export default function CreateInvoice() {
           description: i.description,
           quantity: parseFloat(i.quantity) || 1,
           unit: i.unit || '',
+          rate: parseFloat(i.rate) || (i.amount && i.quantity ? parseFloat(i.amount) / parseFloat(i.quantity) : 0),
           amount: parseFloat(i.amount)
         }))
       });
@@ -283,17 +305,19 @@ export default function CreateInvoice() {
             )}
 
             {/* Table Column Labels */}
-            <div className="hidden sm:flex gap-3 text-xs font-semibold text-gray-500 dark:text-slate-400 px-1 mb-1">
+            <div className="hidden sm:flex gap-2 text-xs font-semibold text-gray-500 dark:text-slate-400 px-1 mb-1">
               <span className="w-6 text-center">#</span>
               <span className="flex-1">Description</span>
-              <span className="w-24 text-center">Quantity</span>
+              <span className="w-20 text-center">Unit</span>
+              <span className="w-20 text-center">Qty</span>
+              <span className="w-28 text-right pr-2">Rate (₹)</span>
               <span className="w-32 text-right pr-2">Amount (₹)</span>
               {form.items.length > 1 && <span className="w-8"></span>}
             </div>
 
             <div className="space-y-3">
               {form.items.map((item, idx) => (
-                <div key={idx} className="flex gap-3 items-start">
+                <div key={idx} className="flex gap-2 items-start">
                   <div className="w-6 h-6 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-700 dark:text-primary-400 font-bold text-xs flex-shrink-0 mt-3">
                     {idx + 1}
                   </div>
@@ -301,12 +325,21 @@ export default function CreateInvoice() {
                     <textarea
                       className="form-input text-sm"
                       rows={2}
-                      placeholder="Work description (e.g., Total bungalow civil work finished.)"
+                      placeholder="Work description..."
                       value={item.description}
                       onChange={setItem(idx, 'description')}
                     />
                   </div>
-                  <div className="w-24 flex-shrink-0">
+                  <div className="w-20 flex-shrink-0">
+                    <input
+                      type="text"
+                      className="form-input text-sm text-center"
+                      placeholder="e.g. cu.m"
+                      value={item.unit || ''}
+                      onChange={setItem(idx, 'unit')}
+                    />
+                  </div>
+                  <div className="w-20 flex-shrink-0">
                     <input
                       type="number"
                       className="form-input text-sm text-center"
@@ -317,12 +350,26 @@ export default function CreateInvoice() {
                       step="any"
                     />
                   </div>
-                  <div className="w-32 flex-shrink-0">
+                  <div className="w-28 flex-shrink-0">
                     <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₹</span>
+                      <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs">₹</span>
                       <input
                         type="number"
-                        className="form-input pl-7 text-sm"
+                        className="form-input pl-6 text-sm text-right"
+                        placeholder="Rate"
+                        value={item.rate !== undefined ? item.rate : ''}
+                        onChange={setItem(idx, 'rate')}
+                        min="0"
+                        step="0.01"
+                      />
+                    </div>
+                  </div>
+                  <div className="w-32 flex-shrink-0">
+                    <div className="relative">
+                      <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs">₹</span>
+                      <input
+                        type="number"
+                        className="form-input pl-6 text-sm text-right font-medium"
                         placeholder="Amount"
                         value={item.amount}
                         onChange={setItem(idx, 'amount')}

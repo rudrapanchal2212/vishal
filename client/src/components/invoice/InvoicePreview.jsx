@@ -1,12 +1,12 @@
-import { formatDate } from '../../utils/dateFormatter';
+import { formatInvoiceDate } from '../../utils/dateFormatter';
 
 export default function InvoicePreview({ invoice, contractor = {} }) {
   if (!invoice) return null;
 
   const {
-    billNumber, date, customerName, customerAddress, customerPan,
-    items = [], totalAmount, grandTotal, amountInWords,
-    gstEnabled, gstPercent, gstAmount, categoryOfService, notes
+    date, customerName, customerPan,
+    items = [], totalAmount, grandTotal,
+    gstEnabled, gstPercent, gstAmount, categoryOfService, notes, dueDate
   } = invoice;
 
   const displayTotal = gstEnabled ? grandTotal : totalAmount;
@@ -14,259 +14,314 @@ export default function InvoicePreview({ invoice, contractor = {} }) {
   return (
     <div
       id="invoice-preview"
-      className="invoice-font bg-white"
       style={{
         width: '210mm',
         minHeight: '297mm',
-        padding: '15mm 18mm',
+        padding: '16mm 18mm',
         margin: '0 auto',
-        fontSize: '12pt',
-        color: '#000',
-        lineHeight: '1.5',
-        fontFamily: '"Times New Roman", Times, serif'
+        boxSizing: 'border-box',
+        backgroundColor: '#ffffff',
+        fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        color: '#111827',
+        fontSize: '13px',
+        lineHeight: '1.4'
       }}
     >
-      {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: '4px' }}>
-        <div style={{ fontSize: '18pt', fontWeight: 'bold', letterSpacing: '1px', marginBottom: '2px' }}>
-          {contractor.companyName || 'GLOBAL ENTERPRISE'}
+      {/* Header: Business Info (Left) + Date Box (Right) */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div>
+          <div style={{ fontSize: '22px', fontWeight: '700', letterSpacing: '0.8px', color: '#000000', marginBottom: '3px' }}>
+            {contractor.companyName || 'GLOBAL ENTERPRISE'}
+          </div>
+          <div style={{ fontSize: '13px', color: '#374151', marginBottom: '2px' }}>
+            Prop. {contractor.contractorName || 'Vishal Chandrakant Panchal'}
+          </div>
+          <div style={{ fontSize: '13px', color: '#4b5563', marginBottom: '2px' }}>
+            {contractor.address || 'Fatepura, near Urban Bank, Vangad'}
+          </div>
+          <div style={{ fontSize: '12.5px', color: '#4b5563' }}>
+            GSTIN: {contractor.gstNumber || '24DDYPP4105H1Z9'} &middot; PAN: {contractor.pan || 'DDYPP4105H'}
+          </div>
         </div>
-        <div style={{ fontSize: '11pt', fontWeight: '500' }}>
-          Prop. {contractor.contractorName || 'Vishal Chandrakant Panchal'}
-        </div>
-        <div style={{ fontSize: '11pt' }}>
-          <strong>GSTIN :</strong> {contractor.gstNumber || '24DDYPP4105H1Z9'} &nbsp;|&nbsp; <strong>PAN NO. :</strong> {contractor.pan || 'DDYPP4105H'}
-        </div>
-        <div style={{ fontSize: '10pt', marginTop: '2px' }}>
-          {contractor.address || '261, Bus Stand Faliyu, Fatepura Patavel Road, Near Fatepura Police Station, Fatepura, Dist. Dahod, Gujarat - 389172'}
+
+        {/* Date Box */}
+        <div style={{
+          border: '1px solid #111827',
+          padding: '8px 18px',
+          fontSize: '13px',
+          color: '#111827',
+          backgroundColor: '#ffffff',
+          borderRadius: '1px',
+          whiteSpace: 'nowrap'
+        }}>
+          Date: <strong style={{ fontWeight: '700' }}>{formatInvoiceDate(date)}</strong>
         </div>
       </div>
 
-      {/* Divider */}
-      <div style={{ borderTop: '2px solid #000', margin: '10px 0' }} />
+      {/* Top Divider */}
+      <div style={{ borderTop: '1.5px solid #111827', margin: '14px 0 18px 0' }} />
 
-      {/* Invoice Title */}
-      <div style={{ textAlign: 'center', fontSize: '15pt', fontWeight: 'bold', marginBottom: '14px', textDecoration: 'underline' }}>
-        INVOICE
-      </div>
+      {/* BILLED TO and SUBJECT Boxes */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: '16px',
+        marginBottom: '24px'
+      }}>
+        {/* BILLED TO */}
+        <div style={{
+          border: '1px solid #9ca3af',
+          padding: '12px 14px',
+          borderRadius: '1px',
+          minHeight: '75px',
+          boxSizing: 'border-box'
+        }}>
+          <div style={{
+            fontSize: '11px',
+            fontWeight: '600',
+            color: '#6b7280',
+            letterSpacing: '0.6px',
+            borderBottom: '1px solid #e5e7eb',
+            paddingBottom: '5px',
+            marginBottom: '8px',
+            textTransform: 'uppercase'
+          }}>
+            BILLED TO
+          </div>
+          <div style={{ fontWeight: '700', fontSize: '14.5px', color: '#111827' }}>
+            {customerName}
+          </div>
+          {customerPan && (
+            <div style={{ fontSize: '12.5px', color: '#374151', marginTop: '3px' }}>
+              PAN: {customerPan}
+            </div>
+          )}
+        </div>
 
-      {/* Date */}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
-        <div><strong>Date: {formatDate(date)}</strong></div>
-      </div>
-
-      {/* Customer Info */}
-      <div style={{ marginBottom: '14px' }}>
-        <div><strong>Name:</strong> {customerName}</div>
-        {customerPan && (
-          <div><strong>PAN NO. :-</strong> {customerPan}</div>
-        )}
+        {/* SUBJECT */}
+        <div style={{
+          border: '1px solid #9ca3af',
+          padding: '12px 14px',
+          borderRadius: '1px',
+          minHeight: '75px',
+          boxSizing: 'border-box'
+        }}>
+          <div style={{
+            fontSize: '11px',
+            fontWeight: '600',
+            color: '#6b7280',
+            letterSpacing: '0.6px',
+            borderBottom: '1px solid #e5e7eb',
+            paddingBottom: '5px',
+            marginBottom: '8px',
+            textTransform: 'uppercase'
+          }}>
+            SUBJECT
+          </div>
+          <div style={{ fontWeight: '700', fontSize: '14.5px', color: '#111827' }}>
+            {categoryOfService || 'Civil construction work'}
+          </div>
+          <div style={{ fontSize: '12.5px', color: '#4b5563', marginTop: '3px' }}>
+            {dueDate ? `Due date: ${formatInvoiceDate(dueDate)}` : (notes || 'Due within 15 days')}
+          </div>
+        </div>
       </div>
 
       {/* Work Items Table */}
       <table style={{
         width: '100%',
         borderCollapse: 'collapse',
-        marginBottom: '0',
-        border: '1px solid #000'
+        borderTop: '1.5px solid #111827',
+        borderBottom: '1.5px solid #111827'
       }}>
         <thead>
-          <tr>
-            <th style={{
-              border: '1px solid #000',
-              padding: '8px 12px',
-              textAlign: 'center',
-              fontWeight: 'bold',
-              backgroundColor: '#f5f5f5',
-              width: '60%',
-              fontSize: '12pt'
-            }}>
-              Description
-            </th>
-            <th style={{
-              border: '1px solid #000',
-              padding: '8px 12px',
-              textAlign: 'center',
-              fontWeight: 'bold',
-              backgroundColor: '#f5f5f5',
-              width: '18%',
-              fontSize: '12pt'
-            }}>
-              Quantity
-            </th>
-            <th style={{
-              border: '1px solid #000',
-              padding: '8px 12px',
-              textAlign: 'right',
-              fontWeight: 'bold',
-              backgroundColor: '#f5f5f5',
-              width: '22%',
-              textDecoration: 'underline',
-              fontSize: '12pt'
-            }}>
-              Amount(Rs.)
-            </th>
+          <tr style={{
+            borderBottom: '1.5px solid #111827',
+            fontSize: '13px',
+            color: '#111827'
+          }}>
+            <th style={{ padding: '10px 8px', textAlign: 'left', fontWeight: '600', width: '6%' }}>Sr.</th>
+            <th style={{ padding: '10px 8px', textAlign: 'left', fontWeight: '600', width: '44%' }}>Description</th>
+            <th style={{ padding: '10px 8px', textAlign: 'center', fontWeight: '600', width: '12%' }}>Unit</th>
+            <th style={{ padding: '10px 8px', textAlign: 'center', fontWeight: '600', width: '10%' }}>Qty</th>
+            <th style={{ padding: '10px 8px', textAlign: 'right', fontWeight: '600', width: '14%' }}>Rate (₹)</th>
+            <th style={{ padding: '10px 8px', textAlign: 'right', fontWeight: '600', width: '14%' }}>Amount (₹)</th>
           </tr>
         </thead>
         <tbody>
-          {/* Each work item in its own dedicated table row — fixes new-line issue in PDF */}
-          {items.map((item, idx) => (
-            <tr key={`item-${idx}`}>
-              <td style={{
-                border: '1px solid #000',
-                padding: '8px 12px',
-                verticalAlign: 'top'
+          {items.map((item, idx) => {
+            const qty = item.quantity !== undefined && item.quantity !== null && item.quantity !== '' ? item.quantity : 1;
+            const rate = item.rate && item.rate > 0
+              ? item.rate
+              : (item.amount && qty ? item.amount / qty : null);
+
+            return (
+              <tr key={idx} style={{
+                borderBottom: idx === items.length - 1 ? 'none' : '1px solid #e5e7eb',
+                fontSize: '13px',
+                color: '#111827'
               }}>
-                {/* Use block-level div (NOT ol/li) so html2canvas renders each on its own line */}
-                <div style={{
-                  display: 'block',
-                  whiteSpace: 'pre-wrap',
-                  wordBreak: 'break-word',
-                  lineHeight: '1.7',
-                  margin: 0,
-                  padding: 0
-                }}>
-                  {idx + 1}.{'  '}{item.description}
-                </div>
-              </td>
-              <td style={{
-                border: '1px solid #000',
-                padding: '8px 12px',
-                textAlign: 'center',
-                verticalAlign: 'top',
-                whiteSpace: 'nowrap',
-                fontWeight: '500'
-              }}>
-                {item.quantity !== undefined && item.quantity !== null && item.quantity !== ''
-                  ? `${item.quantity}${item.unit ? ` ${item.unit}` : ''}`
-                  : '1'}
-              </td>
-              <td style={{
-                border: '1px solid #000',
-                padding: '8px 12px',
-                textAlign: 'right',
-                verticalAlign: 'top',
-                whiteSpace: 'nowrap'
-              }}>
-                {item.amount
-                  ? parseFloat(item.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })
-                  : ''}
-              </td>
-            </tr>
-          ))}
-
-          {/* Empty filler rows — always show minimum 5 rows total */}
-          {Array.from({ length: Math.max(0, 5 - items.length) }).map((_, i) => (
-            <tr key={`empty-${i}`}>
-              <td style={{ border: '1px solid #000', padding: '8px 12px', height: '32px' }}>&nbsp;</td>
-              <td style={{ border: '1px solid #000', padding: '8px 12px' }}>&nbsp;</td>
-              <td style={{ border: '1px solid #000', padding: '8px 12px' }}>&nbsp;</td>
-            </tr>
-          ))}
-
-          {/* GST row if enabled */}
-          {gstEnabled && (
-            <tr>
-              <td colSpan={2} style={{ border: '1px solid #000', padding: '8px 12px', textAlign: 'right', fontWeight: 'bold' }}>
-                GST ({gstPercent}%)
-              </td>
-              <td style={{ border: '1px solid #000', padding: '8px 12px', textAlign: 'right' }}>
-                {(gstAmount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-              </td>
-            </tr>
-          )}
-
-          {/* Total Row */}
-          <tr>
-            <td colSpan={2} style={{
-              border: '1px solid #000',
-              padding: '10px 12px',
-              textAlign: 'right',
-              fontWeight: 'bold',
-              fontSize: '12pt'
-            }}>
-              Total Amount
-            </td>
-            <td style={{
-              border: '1px solid #000',
-              padding: '10px 12px',
-              textAlign: 'right',
-              fontWeight: 'bold',
-              fontSize: '12pt'
-            }}>
-              {(displayTotal || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-            </td>
-          </tr>
-
-          {/* Amount in Words */}
-          <tr>
-            <td colSpan={3} style={{
-              border: '1px solid #000',
-              padding: '8px 12px',
-              fontSize: '11pt',
-              fontStyle: 'italic'
-            }}>
-              <strong>Amount In Words :</strong> {amountInWords}
-            </td>
-          </tr>
+                <td style={{ padding: '12px 8px', verticalAlign: 'top', color: '#111827' }}>
+                  {idx + 1}
+                </td>
+                <td style={{ padding: '12px 8px', verticalAlign: 'top', color: '#111827', lineHeight: '1.45' }}>
+                  {item.description}
+                </td>
+                <td style={{ padding: '12px 8px', verticalAlign: 'top', textAlign: 'center', color: '#374151' }}>
+                  {item.unit || '-'}
+                </td>
+                <td style={{ padding: '12px 8px', verticalAlign: 'top', textAlign: 'center', color: '#111827' }}>
+                  {Number(qty).toLocaleString('en-IN')}
+                </td>
+                <td style={{ padding: '12px 8px', verticalAlign: 'top', textAlign: 'right', color: '#111827' }}>
+                  {rate ? parseFloat(rate).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '-'}
+                </td>
+                <td style={{ padding: '12px 8px', verticalAlign: 'top', textAlign: 'right', color: '#111827' }}>
+                  {item.amount ? parseFloat(item.amount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
 
-      {/* Notes */}
-      {notes && (
-        <div style={{ marginTop: '10px', fontSize: '10pt', fontStyle: 'italic' }}>
-          <strong>Notes:</strong> {notes}
-        </div>
-      )}
+      {/* Totals Section */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        marginTop: '16px',
+        marginBottom: '26px'
+      }}>
+        <div style={{ display: 'inline-block', textAlign: 'right' }}>
+          {gstEnabled && (
+            <div style={{ marginBottom: '8px', fontSize: '13px', color: '#4b5563' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '32px', marginBottom: '3px' }}>
+                <span>Subtotal</span>
+                <span>₹{parseFloat(totalAmount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '32px' }}>
+                <span>GST ({gstPercent}%)</span>
+                <span>₹{parseFloat(gstAmount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+              </div>
+            </div>
+          )}
 
-      {/* Footer: Bank Details (Left) and Signature (Right) */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'baseline',
+            justifyContent: 'flex-end',
+            gap: '32px',
+            marginBottom: '6px'
+          }}>
+            <span style={{ fontSize: '14px', fontWeight: '500', color: '#111827' }}>
+              Total
+            </span>
+            <span style={{ fontSize: '17px', fontWeight: '700', color: '#111827' }}>
+              ₹{parseFloat(displayTotal || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </span>
+          </div>
+          {/* Heavy black line under amount */}
+          <div style={{
+            width: '150px',
+            height: '2.5px',
+            backgroundColor: '#111827',
+            marginLeft: 'auto'
+          }} />
+        </div>
+      </div>
+
+      {/* Bottom Section: PAYMENT DETAILS (Left) and SIGNATURE (Right) */}
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
-        alignItems: 'flex-start',
-        marginTop: '24px',
-        fontSize: '11pt'
+        alignItems: 'flex-end',
+        marginTop: '36px'
       }}>
-        {/* Left: Category of Service & Bank Details */}
-        <div>
-          {categoryOfService && (
-            <div style={{ marginBottom: '12px', fontSize: '11pt' }}>
-              {categoryOfService}
+        {/* PAYMENT DETAILS Box */}
+        <div style={{
+          border: '1px solid #9ca3af',
+          padding: '14px 18px',
+          borderRadius: '1px',
+          width: '330px',
+          boxSizing: 'border-box'
+        }}>
+          <div style={{
+            fontSize: '11px',
+            fontWeight: '600',
+            color: '#6b7280',
+            letterSpacing: '0.8px',
+            marginBottom: '10px',
+            textTransform: 'uppercase'
+          }}>
+            PAYMENT DETAILS
+          </div>
+          <div style={{ fontSize: '12.5px', lineHeight: '1.8', color: '#374151' }}>
+            <div>
+              <span>A/c name </span>
+              <strong style={{ color: '#111827', fontWeight: '700' }}>
+                {contractor.accountName || contractor.companyName || 'GLOBAL ENTERPRISE'}
+              </strong>
             </div>
-          )}
-          <div style={{ fontSize: '10.5pt', lineHeight: '1.6' }}>
-            <div><strong>Account Name :</strong> {contractor.accountName || contractor.companyName || 'GLOBAL ENTERPRISE'}</div>
-            <div><strong>Bank Name :</strong> {contractor.bankName || 'BOB ( Vangad)'}</div>
-            <div><strong>Account number:</strong> {contractor.accountNumber || '93610200001273'}</div>
-            <div><strong>PAN :</strong> {contractor.pan || 'DDYPP4105H'}</div>
-            <div><strong>IFSC :</strong> {contractor.ifsc || 'BARB0DBVANG'}</div>
+            <div>
+              <span>Bank </span>
+              <span style={{ color: '#111827' }}>
+                {contractor.bankName
+                  ? (contractor.bankName.includes('Bank of Baroda')
+                      ? contractor.bankName
+                      : contractor.bankName.replace(/BOB\s*\(\s*Vangad\s*\)/i, 'Bank of Baroda, Vangad'))
+                  : 'Bank of Baroda, Vangad'}
+              </span>
+            </div>
+            <div>
+              <span>A/c no. </span>
+              <span style={{ color: '#111827' }}>
+                {contractor.accountNumber || '93610200001273'}
+              </span>
+            </div>
+            <div>
+              <span>IFSC </span>
+              <span style={{ color: '#111827' }}>
+                {contractor.ifsc || 'BARB0DBVANG'}
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* Right: Signature (For, Vishal App line removed completely) */}
-        <div style={{ textAlign: 'center', minWidth: '220px' }}>
-          {contractor.signature ? (
-            <div style={{
-              marginBottom: '6px',
-              border: '1px solid #000',
-              padding: '10px 16px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              minHeight: '70px'
-            }}>
+        {/* Signature Area */}
+        <div style={{ textAlign: 'center', width: '250px' }}>
+          {contractor.signature && (
+            <div style={{ marginBottom: '6px' }}>
               <img
                 src={contractor.signature}
                 alt="Signature"
-                style={{ height: '60px', objectFit: 'contain' }}
+                style={{ height: '50px', objectFit: 'contain', margin: '0 auto' }}
               />
             </div>
-          ) : (
-            <div style={{ height: '65px' }} />
           )}
-          <div style={{ whiteSpace: 'nowrap' }}>({contractor.contractorName || 'Vishal Chandrakant Panchal'})</div>
-          <div>(Authorized signatory)</div>
+          <div style={{
+            width: '100%',
+            borderTop: '1px solid #111827',
+            marginBottom: '6px'
+          }} />
+          <div style={{ fontWeight: '600', fontSize: '13px', color: '#111827' }}>
+            {contractor.contractorName || 'Vishal Chandrakant Panchal'}
+          </div>
+          <div style={{ fontSize: '11.5px', color: '#4b5563', marginTop: '1px' }}>
+            Authorized signatory
+          </div>
         </div>
+      </div>
+
+      {/* Footer Disclaimer */}
+      <div style={{
+        borderTop: '1px solid #e5e7eb',
+        marginTop: '32px',
+        paddingTop: '12px',
+        textAlign: 'center',
+        fontSize: '11px',
+        color: '#6b7280'
+      }}>
+        This is a computer-generated invoice &middot; Thank you for your business
       </div>
     </div>
   );

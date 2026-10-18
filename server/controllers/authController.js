@@ -23,12 +23,12 @@ const signup = async (req, res, next) => {
       contractorName: contractorName || 'Vishal Chandrakant Panchal',
       pan: pan || 'DDYPP4105H',
       accountName: accountName || 'GLOBAL ENTERPRISE',
-      bankName: bankName || 'BOB ( Vangad)',
+      bankName: bankName || 'Bank of Baroda, Vangad',
       accountNumber: accountNumber || '93610200001273',
       ifsc: ifsc || 'BARB0DBVANG',
       mobile,
       email,
-      address: address || '261, Bus Stand Faliyu, Fatepura Patavel Road, Near Fatepura Police Station, Fatepura, Dist. Dahod, Gujarat - 389172',
+      address: address || 'Fatepura, near Urban Bank, Vangad',
       password,
       logo: logo || null,
       gstEnabled: req.body.gstEnabled !== undefined ? req.body.gstEnabled : true,
@@ -121,8 +121,8 @@ const getMe = async (req, res) => {
       req.user.accountName = 'GLOBAL ENTERPRISE';
       modified = true;
     }
-    if (!req.user.bankName) {
-      req.user.bankName = 'BOB ( Vangad)';
+    if (!req.user.bankName || req.user.bankName.includes('BOB')) {
+      req.user.bankName = 'Bank of Baroda, Vangad';
       modified = true;
     }
     if (!req.user.accountNumber) {
@@ -145,8 +145,8 @@ const getMe = async (req, res) => {
       req.user.gstNumber = '24DDYPP4105H1Z9';
       modified = true;
     }
-    if (req.user.address?.includes('Avdhoot') || !req.user.address) {
-      req.user.address = '261, Bus Stand Faliyu, Fatepura Patavel Road, Near Fatepura Police Station, Fatepura, Dist. Dahod, Gujarat - 389172';
+    if (req.user.address?.includes('Avdhoot') || req.user.address?.includes('Dahod') || !req.user.address) {
+      req.user.address = 'Fatepura, near Urban Bank, Vangad';
       modified = true;
     }
     if (req.user.logo) {

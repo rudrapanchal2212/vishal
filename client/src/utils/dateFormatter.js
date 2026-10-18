@@ -22,3 +22,13 @@ export function formatMonthYear(dateStr) {
 export function todayInputValue() {
   return new Date().toISOString().split('T')[0];
 }
+
+export function formatInvoiceDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  const day = d.getDate();
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const month = months[d.getMonth()];
+  const year = d.getFullYear();
+  return `${day} ${month} ${year}`;
+}

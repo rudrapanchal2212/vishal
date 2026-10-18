@@ -28,7 +28,7 @@ const UserSchema = new mongoose.Schema({
   },
   bankName: {
     type: String,
-    default: 'BOB ( Vangad)',
+    default: 'Bank of Baroda, Vangad',
     trim: true
   },
   accountNumber: {
@@ -57,7 +57,7 @@ const UserSchema = new mongoose.Schema({
   address: {
     type: String,
     required: [true, 'Address is required'],
-    default: '261, Bus Stand Faliyu, Fatepura Patavel Road, Near Fatepura Police Station, Fatepura, Dist. Dahod, Gujarat - 389172'
+    default: 'Fatepura, near Urban Bank, Vangad'
   },
   logo: {
     type: String,

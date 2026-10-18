@@ -10,12 +10,12 @@ const INITIAL = {
   pan: 'DDYPP4105H',
   gstNumber: '24DDYPP4105H1Z9',
   accountName: 'GLOBAL ENTERPRISE',
-  bankName: 'BOB ( Vangad)',
+  bankName: 'Bank of Baroda, Vangad',
   accountNumber: '93610200001273',
   ifsc: 'BARB0DBVANG',
   mobile: '',
   email: '',
-  address: '261, Bus Stand Faliyu, Fatepura Patavel Road,\nNear Fatepura Police Station,\nFatepura, Dist. Dahod, Gujarat - 389172',
+  address: 'Fatepura, near Urban Bank, Vangad',
   password: '',
   confirmPassword: ''
 };
