@@ -124,7 +124,7 @@ export default function EditInvoice() {
         dueDate: form.dueDate || null,
         items: form.items.map(i => ({
           description: i.description.trim(),
-          quantity: parseFloat(i.quantity) || 1,
+          quantity: (i.quantity !== '' && i.quantity !== null && !isNaN(i.quantity)) ? parseFloat(i.quantity) : null,
           unit: i.unit || '',
           rate: parseFloat(i.rate) || (i.amount && i.quantity ? parseFloat(i.amount) / parseFloat(i.quantity) : 0),
           amount: parseFloat(i.amount)

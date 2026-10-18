@@ -17,7 +17,7 @@ const UserSchema = new mongoose.Schema({
   pan: {
     type: String,
     required: [true, 'PAN number is required'],
-    default: 'DDYPP4105H',
+    default: 'CRGPV7742H',
     uppercase: true,
     trim: true
   },
@@ -28,12 +28,12 @@ const UserSchema = new mongoose.Schema({
   },
   bankName: {
     type: String,
-    default: 'Bank of Baroda, Vangad',
+    default: 'BANK OF BARODA ( VANGAD )',
     trim: true
   },
   accountNumber: {
     type: String,
-    default: '93610200001273',
+    default: '93610200001314',
     trim: true
   },
   ifsc: {
@@ -45,6 +45,7 @@ const UserSchema = new mongoose.Schema({
   mobile: {
     type: String,
     required: [true, 'Mobile number is required'],
+    default: '8200172009',
     trim: true
   },
   email: {
@@ -57,7 +58,7 @@ const UserSchema = new mongoose.Schema({
   address: {
     type: String,
     required: [true, 'Address is required'],
-    default: 'Fatepura, near Urban Bank, Vangad'
+    default: 'ZALOD RAOD,\nFATEPURA, DAHOD\nPINCODE-389172'
   },
   logo: {
     type: String,

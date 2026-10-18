@@ -145,7 +145,7 @@ export default function CreateInvoice() {
         ...form,
         items: form.items.map(i => ({
           description: i.description,
-          quantity: parseFloat(i.quantity) || 1,
+          quantity: (i.quantity !== '' && i.quantity !== null && !isNaN(i.quantity)) ? parseFloat(i.quantity) : null,
           unit: i.unit || '',
           rate: parseFloat(i.rate) || (i.amount && i.quantity ? parseFloat(i.amount) / parseFloat(i.quantity) : 0),
           amount: parseFloat(i.amount)

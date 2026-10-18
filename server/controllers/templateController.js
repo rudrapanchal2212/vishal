@@ -5,6 +5,52 @@ const amountToWords = require('../utils/amountToWords');
 
 const DEFAULT_TEMPLATES = [
   {
+    name: '2 Lakh Material Estimate (Panchayat)',
+    description: 'Panchayat estimate - METAL, CEMENT, RETI, CONCRETE, LABOUR - ₹2,00,000',
+    categoryOfService: 'Civil Construction Work',
+    gstEnabled: false,
+    gstPercent: 18,
+    items: [
+      {
+        description: 'METAL',
+        quantity: null,
+        unit: '',
+        rate: 50000,
+        amount: 50000
+      },
+      {
+        description: 'CEMENT',
+        quantity: 100,
+        unit: '',
+        rate: 400,
+        amount: 40000
+      },
+      {
+        description: 'RETI',
+        quantity: 1,
+        unit: '',
+        rate: 40000,
+        amount: 40000
+      },
+      {
+        description: 'CONCRETE',
+        quantity: 1,
+        unit: '',
+        rate: 30000,
+        amount: 30000
+      },
+      {
+        description: 'LABOUR',
+        quantity: null,
+        unit: '',
+        rate: 40000,
+        amount: 40000
+      }
+    ],
+    totalAmount: 200000,
+    isDefault: true
+  },
+  {
     name: '2 Lakh Road Costing',
     description: 'Standard Panchayat road construction estimate - ₹2,00,000',
     categoryOfService: 'Civil Construction Work',
