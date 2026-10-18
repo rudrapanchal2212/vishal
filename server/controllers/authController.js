@@ -20,7 +20,7 @@ const signup = async (req, res, next) => {
 
     const user = await User.create({
       companyName: companyName || 'GLOBAL ENTERPRISE',
-      contractorName: contractorName || 'Rashminkumar R Patel',
+      contractorName: contractorName || 'Vishal Chandrakant Panchal',
       pan: pan || 'DDYPP4105H',
       accountName: accountName || 'GLOBAL ENTERPRISE',
       bankName: bankName || 'BOB ( Vangad)',
@@ -28,9 +28,11 @@ const signup = async (req, res, next) => {
       ifsc: ifsc || 'BARB0DBVANG',
       mobile,
       email,
-      address: address || 'A-19, Avdhoot Nagar Society-1, Bholav, Bharuch-392001',
+      address: address || '261, Bus Stand Faliyu, Fatepura Patavel Road, Near Fatepura Police Station, Fatepura, Dist. Dahod, Gujarat - 389172',
       password,
-      logo: logo || null
+      logo: logo || null,
+      gstEnabled: req.body.gstEnabled !== undefined ? req.body.gstEnabled : true,
+      gstNumber: req.body.gstNumber || '24DDYPP4105H1Z9'
     });
 
     const token = generateToken(user._id);
@@ -133,6 +135,18 @@ const getMe = async (req, res) => {
     }
     if (req.user.pan === 'BMVPP3612B' || !req.user.pan) {
       req.user.pan = 'DDYPP4105H';
+      modified = true;
+    }
+    if (req.user.contractorName === 'Rashminkumar R Patel' || !req.user.contractorName) {
+      req.user.contractorName = 'Vishal Chandrakant Panchal';
+      modified = true;
+    }
+    if (!req.user.gstNumber || req.user.gstNumber === '') {
+      req.user.gstNumber = '24DDYPP4105H1Z9';
+      modified = true;
+    }
+    if (req.user.address?.includes('Avdhoot') || !req.user.address) {
+      req.user.address = '261, Bus Stand Faliyu, Fatepura Patavel Road, Near Fatepura Police Station, Fatepura, Dist. Dahod, Gujarat - 389172';
       modified = true;
     }
     if (req.user.logo) {

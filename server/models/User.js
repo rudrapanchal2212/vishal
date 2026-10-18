@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema({
   contractorName: {
     type: String,
     required: [true, 'Contractor name is required'],
-    default: 'Rashminkumar R Patel',
+    default: 'Vishal Chandrakant Panchal',
     trim: true
   },
   pan: {
@@ -57,7 +57,7 @@ const UserSchema = new mongoose.Schema({
   address: {
     type: String,
     required: [true, 'Address is required'],
-    default: 'A-19, Avdhoot Nagar Society-1, Bholav, Bharuch-392001'
+    default: '261, Bus Stand Faliyu, Fatepura Patavel Road, Near Fatepura Police Station, Fatepura, Dist. Dahod, Gujarat - 389172'
   },
   logo: {
     type: String,
@@ -79,11 +79,11 @@ const UserSchema = new mongoose.Schema({
   },
   gstEnabled: {
     type: Boolean,
-    default: false
+    default: true
   },
   gstNumber: {
     type: String,
-    default: ''
+    default: '24DDYPP4105H1Z9'
   },
   categoryOfService: {
     type: String,

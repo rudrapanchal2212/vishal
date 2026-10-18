@@ -13,7 +13,7 @@ export default function Profile() {
 
   const [form, setForm] = useState({
     companyName: user?.companyName || 'GLOBAL ENTERPRISE',
-    contractorName: user?.contractorName || 'Rashminkumar R Patel',
+    contractorName: user?.contractorName || 'Vishal Chandrakant Panchal',
     pan: user?.pan || 'DDYPP4105H',
     accountName: user?.accountName || 'GLOBAL ENTERPRISE',
     bankName: user?.bankName || 'BOB ( Vangad)',
@@ -21,12 +21,12 @@ export default function Profile() {
     ifsc: user?.ifsc || 'BARB0DBVANG',
     mobile: user?.mobile || '',
     email: user?.email || '',
-    address: user?.address || 'A-19, Avdhoot Nagar Society-1, Bholav, Bharuch-392001',
+    address: user?.address || '261, Bus Stand Faliyu, Fatepura Patavel Road, Near Fatepura Police Station, Fatepura, Dist. Dahod, Gujarat - 389172',
     logo: user?.logo || null,
     signature: user?.signature || null,
     darkMode: user?.darkMode || false,
-    gstEnabled: user?.gstEnabled || false,
-    gstNumber: user?.gstNumber || '',
+    gstEnabled: user?.gstEnabled !== undefined ? user.gstEnabled : true,
+    gstNumber: user?.gstNumber || '24DDYPP4105H1Z9',
     categoryOfService: user?.categoryOfService || 'Civil Construction Work'
   });
 

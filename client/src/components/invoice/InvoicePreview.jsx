@@ -31,14 +31,14 @@ export default function InvoicePreview({ invoice, contractor = {} }) {
         <div style={{ fontSize: '18pt', fontWeight: 'bold', letterSpacing: '1px', marginBottom: '2px' }}>
           {contractor.companyName || 'GLOBAL ENTERPRISE'}
         </div>
-        <div style={{ fontSize: '11pt' }}>
-          Prop. {contractor.contractorName || 'Rashminkumar R Patel'}
+        <div style={{ fontSize: '11pt', fontWeight: '500' }}>
+          Prop. {contractor.contractorName || 'Vishal Chandrakant Panchal'}
         </div>
         <div style={{ fontSize: '11pt' }}>
-          PAN NO.({contractor.pan || 'DDYPP4105H'})
+          <strong>GSTIN :</strong> {contractor.gstNumber || '24DDYPP4105H1Z9'} &nbsp;|&nbsp; <strong>PAN NO. :</strong> {contractor.pan || 'DDYPP4105H'}
         </div>
         <div style={{ fontSize: '10pt', marginTop: '2px' }}>
-          {contractor.address || 'A-19, Avdhoot Nagar Society-1, Bholav, Bharuch-392001'}
+          {contractor.address || '261, Bus Stand Faliyu, Fatepura Patavel Road, Near Fatepura Police Station, Fatepura, Dist. Dahod, Gujarat - 389172'}
         </div>
       </div>
 
@@ -58,9 +58,6 @@ export default function InvoicePreview({ invoice, contractor = {} }) {
       {/* Customer Info */}
       <div style={{ marginBottom: '14px' }}>
         <div><strong>Name:</strong> {customerName}</div>
-        {customerAddress && (
-          <div style={{ paddingLeft: '40px', whiteSpace: 'pre-line' }}>{customerAddress}</div>
-        )}
         {customerPan && (
           <div><strong>PAN NO. :-</strong> {customerPan}</div>
         )}
@@ -267,7 +264,7 @@ export default function InvoicePreview({ invoice, contractor = {} }) {
           ) : (
             <div style={{ height: '65px' }} />
           )}
-          <div style={{ whiteSpace: 'nowrap' }}>({contractor.contractorName || 'Rashminkumar R Patel'})</div>
+          <div style={{ whiteSpace: 'nowrap' }}>({contractor.contractorName || 'Vishal Chandrakant Panchal'})</div>
           <div>(Authorized signatory)</div>
         </div>
       </div>

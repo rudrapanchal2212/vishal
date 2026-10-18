@@ -6,15 +6,16 @@ import toast from 'react-hot-toast';
 
 const INITIAL = {
   companyName: 'GLOBAL ENTERPRISE',
-  contractorName: 'Rashminkumar R Patel',
+  contractorName: 'Vishal Chandrakant Panchal',
   pan: 'DDYPP4105H',
+  gstNumber: '24DDYPP4105H1Z9',
   accountName: 'GLOBAL ENTERPRISE',
   bankName: 'BOB ( Vangad)',
   accountNumber: '93610200001273',
   ifsc: 'BARB0DBVANG',
   mobile: '',
   email: '',
-  address: 'A-19, Avdhoot Nagar Society-1,\nBholav, Bharuch-392001',
+  address: '261, Bus Stand Faliyu, Fatepura Patavel Road,\nNear Fatepura Police Station,\nFatepura, Dist. Dahod, Gujarat - 389172',
   password: '',
   confirmPassword: ''
 };
