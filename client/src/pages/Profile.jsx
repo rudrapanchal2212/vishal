@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import MainLayout from '../layouts/MainLayout';
 import { useAuth } from '../context/AuthContext';
 import { profileService } from '../services/profileService';
@@ -12,12 +12,16 @@ export default function Profile() {
   const sigRef = useRef();
 
   const [form, setForm] = useState({
-    companyName: user?.companyName || '',
-    contractorName: user?.contractorName || '',
-    pan: user?.pan || '',
+    companyName: user?.companyName || 'GLOBAL ENTERPRISE',
+    contractorName: user?.contractorName || 'Rashminkumar R Patel',
+    pan: user?.pan || 'DDYPP4105H',
+    accountName: user?.accountName || 'GLOBAL ENTERPRISE',
+    bankName: user?.bankName || 'BOB ( Vangad)',
+    accountNumber: user?.accountNumber || '93610200001273',
+    ifsc: user?.ifsc || 'BARB0DBVANG',
     mobile: user?.mobile || '',
     email: user?.email || '',
-    address: user?.address || '',
+    address: user?.address || 'A-19, Avdhoot Nagar Society-1, Bholav, Bharuch-392001',
     logo: user?.logo || null,
     signature: user?.signature || null,
     darkMode: user?.darkMode || false,
@@ -25,6 +29,30 @@ export default function Profile() {
     gstNumber: user?.gstNumber || '',
     categoryOfService: user?.categoryOfService || 'Civil Construction Work'
   });
+
+  useEffect(() => {
+    if (user) {
+      setForm(p => ({
+        ...p,
+        companyName: user.companyName || p.companyName,
+        contractorName: user.contractorName || p.contractorName,
+        pan: user.pan || p.pan,
+        accountName: user.accountName || p.accountName,
+        bankName: user.bankName || p.bankName,
+        accountNumber: user.accountNumber || p.accountNumber,
+        ifsc: user.ifsc || p.ifsc,
+        mobile: user.mobile || p.mobile,
+        email: user.email || p.email,
+        address: user.address || p.address,
+        logo: user.logo !== undefined ? user.logo : p.logo,
+        signature: user.signature !== undefined ? user.signature : p.signature,
+        darkMode: user.darkMode !== undefined ? user.darkMode : p.darkMode,
+        gstEnabled: user.gstEnabled !== undefined ? user.gstEnabled : p.gstEnabled,
+        gstNumber: user.gstNumber !== undefined ? user.gstNumber : p.gstNumber,
+        categoryOfService: user.categoryOfService || p.categoryOfService
+      }));
+    }
+  }, [user]);
 
   const [passForm, setPassForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
 
@@ -182,6 +210,32 @@ export default function Profile() {
               <div className="sm:col-span-2">
                 <label className="form-label">Default Category of Service</label>
                 <input className="form-input" value={form.categoryOfService} onChange={set('categoryOfService')} placeholder="Civil Construction Work" />
+              </div>
+            </div>
+          </div>
+
+          {/* Bank Details */}
+          <div className="card p-5 space-y-4">
+            <h3 className="font-bold text-gray-900 dark:text-white">Bank Details</h3>
+            <p className="text-xs text-gray-500 dark:text-slate-400">
+              This information will be printed on every bill opposite the signature area.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="form-label">Account Name *</label>
+                <input className="form-input" value={form.accountName} onChange={set('accountName')} placeholder="GLOBAL ENTERPRISE" />
+              </div>
+              <div>
+                <label className="form-label">Bank Name *</label>
+                <input className="form-input" value={form.bankName} onChange={set('bankName')} placeholder="BOB ( Vangad)" />
+              </div>
+              <div>
+                <label className="form-label">Account Number *</label>
+                <input className="form-input" value={form.accountNumber} onChange={set('accountNumber')} placeholder="93610200001273" />
+              </div>
+              <div>
+                <label className="form-label">IFSC Code *</label>
+                <input className="form-input uppercase" value={form.ifsc} onChange={set('ifsc')} placeholder="BARB0DBVANG" />
               </div>
             </div>
           </div>

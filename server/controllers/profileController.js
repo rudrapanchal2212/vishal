@@ -11,12 +11,12 @@ const getProfile = async (req, res) => {
 const updateProfile = async (req, res, next) => {
   try {
     const {
-      companyName, contractorName, pan, mobile, email,
+      companyName, contractorName, pan, accountName, bankName, accountNumber, ifsc, mobile, email,
       address, logo, signature, darkMode, gstEnabled, gstNumber, categoryOfService
     } = req.body;
 
     const updateData = {
-      companyName, contractorName, pan, mobile, email,
+      companyName, contractorName, pan, accountName, bankName, accountNumber, ifsc, mobile, email,
       address, darkMode, gstEnabled, gstNumber, categoryOfService
     };
 

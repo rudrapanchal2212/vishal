@@ -15,7 +15,7 @@ export default function Navbar() {
   const { pathname } = useLocation();
   const { user } = useAuth();
   
-  const title = Object.entries(titles).find(([path]) => pathname.startsWith(path))?.[1] || 'Vishal App';
+  const title = Object.entries(titles).find(([path]) => pathname.startsWith(path))?.[1] || 'GLOBAL ENTERPRISE';
 
   return (
     <header className="md:ml-64 sticky top-0 z-20 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border-b border-gray-100 dark:border-slate-700">

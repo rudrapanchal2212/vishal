@@ -97,8 +97,8 @@ export async function shareInvoicePDF(elementId, invoiceData) {
   if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
     try {
       await navigator.share({
-        title: `Invoice #${invoiceData.billNumber}`,
-        text: `${invoiceData.companyName || 'Vishal App'} - Invoice #${invoiceData.billNumber} for ${invoiceData.customerName} - ₹${(invoiceData.grandTotal || invoiceData.totalAmount || 0).toLocaleString('en-IN')}`,
+        title: `Invoice - ${invoiceData.customerName}`,
+        text: `${invoiceData.companyName || 'GLOBAL ENTERPRISE'} - Invoice for ${invoiceData.customerName} - ₹${(invoiceData.grandTotal || invoiceData.totalAmount || 0).toLocaleString('en-IN')}`,
         files: [pdfFile]
       });
       return { success: true };

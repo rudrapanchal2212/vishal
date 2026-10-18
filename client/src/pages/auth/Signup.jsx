@@ -5,9 +5,13 @@ import AuthLayout from '../../layouts/AuthLayout';
 import toast from 'react-hot-toast';
 
 const INITIAL = {
-  companyName: 'Vishal App',
+  companyName: 'GLOBAL ENTERPRISE',
   contractorName: 'Rashminkumar R Patel',
-  pan: 'BMVPP3612B',
+  pan: 'DDYPP4105H',
+  accountName: 'GLOBAL ENTERPRISE',
+  bankName: 'BOB ( Vangad)',
+  accountNumber: '93610200001273',
+  ifsc: 'BARB0DBVANG',
   mobile: '',
   email: '',
   address: 'A-19, Avdhoot Nagar Society-1,\nBholav, Bharuch-392001',
@@ -35,7 +39,7 @@ export default function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { companyName, contractorName, pan, mobile, email, address, password, confirmPassword } = form;
+    const { companyName, contractorName, pan, accountName, bankName, accountNumber, ifsc, mobile, email, address, password, confirmPassword } = form;
     if (!companyName || !contractorName || !pan || !mobile || !email || !address || !password)
       return toast.error('Please fill all required fields');
     if (password !== confirmPassword) return toast.error('Passwords do not match');
@@ -43,7 +47,7 @@ export default function Signup() {
 
     setLoading(true);
     try {
-      await signup({ companyName, contractorName, pan, mobile, email, address, password, logo: logoPreview });
+      await signup({ companyName, contractorName, pan, accountName, bankName, accountNumber, ifsc, mobile, email, address, password, logo: logoPreview });
       toast.success('Account created successfully!');
       navigate('/dashboard', { replace: true });
     } catch (err) {
@@ -85,7 +89,7 @@ export default function Signup() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="form-label">Company Name *</label>
-            <input className="form-input" value={form.companyName} onChange={set('companyName')} placeholder="Vishal App" />
+            <input className="form-input" value={form.companyName} onChange={set('companyName')} placeholder="GLOBAL ENTERPRISE" />
           </div>
           <div>
             <label className="form-label">Contractor Name *</label>
@@ -93,7 +97,7 @@ export default function Signup() {
           </div>
           <div>
             <label className="form-label">PAN Number *</label>
-            <input className="form-input uppercase" value={form.pan} onChange={set('pan')} placeholder="ABCDE1234F" maxLength={10} />
+            <input className="form-input uppercase" value={form.pan} onChange={set('pan')} placeholder="DDYPP4105H" maxLength={10} />
           </div>
           <div>
             <label className="form-label">Mobile Number *</label>

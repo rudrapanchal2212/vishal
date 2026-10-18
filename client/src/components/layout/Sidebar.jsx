@@ -61,7 +61,7 @@ export default function Sidebar() {
           )}
           <div className="min-w-0">
             <p className="font-bold text-gray-900 dark:text-white text-sm leading-tight truncate">
-              {user?.companyName || 'Vishal App'}
+              {user?.companyName || 'GLOBAL ENTERPRISE'}
             </p>
             <p className="text-xs text-gray-500 dark:text-slate-400 truncate">{user?.contractorName}</p>
           </div>

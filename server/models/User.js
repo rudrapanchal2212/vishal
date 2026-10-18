@@ -5,16 +5,40 @@ const UserSchema = new mongoose.Schema({
   companyName: {
     type: String,
     required: [true, 'Company name is required'],
+    default: 'GLOBAL ENTERPRISE',
     trim: true
   },
   contractorName: {
     type: String,
     required: [true, 'Contractor name is required'],
+    default: 'Rashminkumar R Patel',
     trim: true
   },
   pan: {
     type: String,
     required: [true, 'PAN number is required'],
+    default: 'DDYPP4105H',
+    uppercase: true,
+    trim: true
+  },
+  accountName: {
+    type: String,
+    default: 'GLOBAL ENTERPRISE',
+    trim: true
+  },
+  bankName: {
+    type: String,
+    default: 'BOB ( Vangad)',
+    trim: true
+  },
+  accountNumber: {
+    type: String,
+    default: '93610200001273',
+    trim: true
+  },
+  ifsc: {
+    type: String,
+    default: 'BARB0DBVANG',
     uppercase: true,
     trim: true
   },
@@ -32,7 +56,8 @@ const UserSchema = new mongoose.Schema({
   },
   address: {
     type: String,
-    required: [true, 'Address is required']
+    required: [true, 'Address is required'],
+    default: 'A-19, Avdhoot Nagar Society-1, Bholav, Bharuch-392001'
   },
   logo: {
     type: String,

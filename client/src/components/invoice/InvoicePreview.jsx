@@ -1,7 +1,7 @@
 import { formatDate } from '../../utils/dateFormatter';
 
-export default function InvoicePreview({ invoice, contractor }) {
-  if (!invoice || !contractor) return null;
+export default function InvoicePreview({ invoice, contractor = {} }) {
+  if (!invoice) return null;
 
   const {
     billNumber, date, customerName, customerAddress, customerPan,
@@ -28,21 +28,14 @@ export default function InvoicePreview({ invoice, contractor }) {
     >
       {/* Header */}
       <div style={{ textAlign: 'center', marginBottom: '4px' }}>
-        {contractor.logo && (
-          <img
-            src={contractor.logo}
-            alt="Company Logo"
-            style={{ height: '85px', objectFit: 'contain', margin: '0 auto 2px auto', display: 'block' }}
-          />
-        )}
         <div style={{ fontSize: '18pt', fontWeight: 'bold', letterSpacing: '1px', marginBottom: '2px' }}>
-          {contractor.companyName || 'VISHAL APP'}
+          {contractor.companyName || 'GLOBAL ENTERPRISE'}
         </div>
         <div style={{ fontSize: '11pt' }}>
           Prop. {contractor.contractorName || 'Rashminkumar R Patel'}
         </div>
         <div style={{ fontSize: '11pt' }}>
-          PAN NO.({contractor.pan || 'BMVPP3612B'})
+          PAN NO.({contractor.pan || 'DDYPP4105H'})
         </div>
         <div style={{ fontSize: '10pt', marginTop: '2px' }}>
           {contractor.address || 'A-19, Avdhoot Nagar Society-1, Bholav, Bharuch-392001'}
@@ -57,9 +50,8 @@ export default function InvoicePreview({ invoice, contractor }) {
         INVOICE
       </div>
 
-      {/* Bill No and Date */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-        <div><strong>Bill No.: {billNumber}</strong></div>
+      {/* Date */}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
         <div><strong>Date: {formatDate(date)}</strong></div>
       </div>
 
@@ -230,16 +222,33 @@ export default function InvoicePreview({ invoice, contractor }) {
         </div>
       )}
 
-      {/* Footer */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px', fontSize: '11pt' }}>
-        <div>{categoryOfService || 'Category of service'}</div>
-        <div>For, {contractor.companyName || 'Vishal App'}</div>
-      </div>
+      {/* Footer: Bank Details (Left) and Signature (Right) */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        marginTop: '24px',
+        fontSize: '11pt'
+      }}>
+        {/* Left: Category of Service & Bank Details */}
+        <div>
+          {categoryOfService && (
+            <div style={{ marginBottom: '12px', fontSize: '11pt' }}>
+              {categoryOfService}
+            </div>
+          )}
+          <div style={{ fontSize: '10.5pt', lineHeight: '1.6' }}>
+            <div><strong>Account Name :</strong> {contractor.accountName || contractor.companyName || 'GLOBAL ENTERPRISE'}</div>
+            <div><strong>Bank Name :</strong> {contractor.bankName || 'BOB ( Vangad)'}</div>
+            <div><strong>Account number:</strong> {contractor.accountNumber || '93610200001273'}</div>
+            <div><strong>PAN :</strong> {contractor.pan || 'DDYPP4105H'}</div>
+            <div><strong>IFSC :</strong> {contractor.ifsc || 'BARB0DBVANG'}</div>
+          </div>
+        </div>
 
-      {/* Signature */}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '50px' }}>
-        <div style={{ textAlign: 'center' }}>
-          {contractor.signature && (
+        {/* Right: Signature (For, Vishal App line removed completely) */}
+        <div style={{ textAlign: 'center', minWidth: '220px' }}>
+          {contractor.signature ? (
             <div style={{
               marginBottom: '6px',
               border: '1px solid #000',
@@ -255,6 +264,8 @@ export default function InvoicePreview({ invoice, contractor }) {
                 style={{ height: '60px', objectFit: 'contain' }}
               />
             </div>
+          ) : (
+            <div style={{ height: '65px' }} />
           )}
           <div style={{ whiteSpace: 'nowrap' }}>({contractor.contractorName || 'Rashminkumar R Patel'})</div>
           <div>(Authorized signatory)</div>
