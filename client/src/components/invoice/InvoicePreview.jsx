@@ -105,7 +105,7 @@ export default function InvoicePreview({ invoice, contractor = {} }) {
           </div>
         </div>
 
-        {/* Right: INVOICE title + DATE & BILL NO boxes */}
+        {/* Right: INVOICE title + DATE box */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
           <div
             style={{
@@ -122,7 +122,7 @@ export default function InvoicePreview({ invoice, contractor = {} }) {
           </div>
 
           {/* DATE Row */}
-          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
             <span style={{ fontSize: '12.5px', fontWeight: '700', color: '#000000', marginRight: '10px' }}>
               DATE
             </span>
@@ -141,29 +141,6 @@ export default function InvoicePreview({ invoice, contractor = {} }) {
               }}
             >
               {date ? formatDate(date) : ''}
-            </div>
-          </div>
-
-          {/* BILL NO Row */}
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <span style={{ fontSize: '12.5px', fontWeight: '700', color: '#000000', marginRight: '10px' }}>
-              BILL NO
-            </span>
-            <div
-              style={{
-                width: '110px',
-                height: '22px',
-                border: '1px solid #000000',
-                backgroundColor: '#ffffff',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '12px',
-                fontWeight: '700',
-                color: '#000000'
-              }}
-            >
-              {billNumber || ''}
             </div>
           </div>
         </div>
