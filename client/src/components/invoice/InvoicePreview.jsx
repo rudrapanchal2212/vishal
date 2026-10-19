@@ -38,7 +38,6 @@ export default function InvoicePreview({ invoice, contractor = {} }) {
   // Company details with exact fallbacks from the provided template
   const companyName = contractor.companyName || 'GLOBAL ENTERPRISE';
   const contractorMobile = contractor.mobile || '8200172009';
-  const panNumber = contractor.pan || 'CRGPV7742H';
   const accountNumber = contractor.accountNumber || '93610200001314';
   const ifscCode = contractor.ifsc || 'BARB0DBVANG';
   const bankName = contractor.bankName || 'BANK OF BARODA ( VANGAD )';
@@ -517,7 +516,7 @@ export default function InvoicePreview({ invoice, contractor = {} }) {
             </td>
           </tr>
 
-          {/* Row 6: PAN Number + TOTAL */}
+          {/* Row 6: TOTAL */}
           <tr style={{ height: '26px' }}>
             <td
               style={{
@@ -525,11 +524,10 @@ export default function InvoicePreview({ invoice, contractor = {} }) {
                 borderRight: '1px solid #000000',
                 fontSize: '11.5px',
                 color: '#000000',
-                padding: '2px 8px',
-                textTransform: 'uppercase'
+                padding: '2px 8px'
               }}
             >
-              PAN NUMBER : {panNumber}
+              {'\u00A0'}
             </td>
             <td
               style={{
